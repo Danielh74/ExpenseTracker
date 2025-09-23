@@ -1,33 +1,40 @@
-import { useState } from 'react';
-import { Button, View } from 'react-native'
-import { EXPENSES } from '../data/dummy-data';
+import { useContext, useState } from 'react';
+import { Button, StyleSheet, View } from 'react-native'
 import ExpensesOutput from '../components/ExpensesOutput/ExpensesOutput';
-
-const changeRecentRange = (numOfDays) => {
-    const now = new Date();
-    const recentRange = new Date(now.getFullYear(), now.getMonth(), now.getDate() - numOfDays);
-    return EXPENSES.filter(expense => expense.date >= recentRange);
-};
+import { GlobalStyles } from '../constants/styles';
+import { ExpensesContext } from '../store/expenses-context';
+import { getEarliestDate } from '../util/date';
 
 function RecentExpenses() {
+    const { expenses } = useContext(ExpensesContext);
     const [period, setPeriod] = useState(7);
-    const [expenseList, setExpenseList] = useState(changeRecentRange(period));
+    const [recentExpenses, setRecentExpenses] = useState(expenses.filter(expense => expense.date >= getEarliestDate(7)));
 
-    const onPress = (numOfDays) => {
+    const changeRecentRange = (numOfDays) => {
         setPeriod(numOfDays);
-        setExpenseList(changeRecentRange(numOfDays));
-    }
+        setRecentExpenses(expenses.filter(expense => expense.date >= getEarliestDate(numOfDays)));
+    };
 
     return (
-        <View>
-            <View>
-                <Button title='week' onPress={() => onPress(7)} />
-                <Button title='month' onPress={() => onPress(30)} />
+        <View style={styles.container}>
+            <View style={styles.button}>
+                <Button title='week' onPress={() => changeRecentRange(7)} />
+                <Button title='month' onPress={() => changeRecentRange(30)} />
             </View>
-            <ExpensesOutput expenses={expenseList} period={period} />
+            <ExpensesOutput expenses={recentExpenses} period={period} />
         </View>
-    )
-}
+    );
+};
 
 export default RecentExpenses;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    button: {
+        backgroundColor: GlobalStyles.colors.primary700
+    }
+});
+
 
