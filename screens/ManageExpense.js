@@ -8,7 +8,7 @@ import { ExpensesContext } from "../store/expenses-context";
 function ManageExpense({ route, navigation }) {
     const expenseId = route.params?.expenseId;
     const isEditing = !!expenseId;
-    const { addExpense, deleteExpense, updateExpense, expenses } = useContext(ExpensesContext);
+    const { addExpense, deleteExpense, updateExpense } = useContext(ExpensesContext);
 
     useLayoutEffect(() => {
         navigation.setOptions({

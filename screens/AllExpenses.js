@@ -5,9 +5,10 @@ import { ExpensesContext } from '../store/expenses-context';
 
 function AllExpenses() {
     const { expenses } = useContext(ExpensesContext);
+    const content = 'No Expenses have added.'
     return (
         <View style={styles.container}>
-            <ExpensesOutput expenses={expenses} />
+            <ExpensesOutput expenses={expenses} fallbackText={content} />
         </View>
     )
 }
