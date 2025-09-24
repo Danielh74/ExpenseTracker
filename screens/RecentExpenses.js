@@ -23,8 +23,8 @@ function RecentExpenses() {
     return (
         <View style={styles.container}>
             <View style={styles.button}>
-                <Button title='week' onPress={() => changeRecentRange(7)} />
-                <Button title='month' onPress={() => changeRecentRange(30)} />
+                <Button title='week' onPress={changeRecentRange.bind(this, 7)} />
+                <Button title='month' onPress={changeRecentRange.bind(this, 30)} />
             </View>
             <ExpensesOutput expenses={recentExpenses} period={period} fallbackText={content} />
         </View>

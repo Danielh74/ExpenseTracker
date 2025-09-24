@@ -7,3 +7,8 @@ export function getEarliestDate(numOfDays) {
     const range = new Date(today.getFullYear(), today.getMonth(), today.getDate() - numOfDays);
     return range;
 };
+
+export function getDateString(date) {
+    const dateString = date.toISOString().slice(0, 10);
+    return dateString;
+};
