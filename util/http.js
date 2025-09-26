@@ -3,9 +3,7 @@ import axios from "axios";
 const url = 'https://expensetracker-e1ccd-default-rtdb.asia-southeast1.firebasedatabase.app'
 
 export async function storeExpense(expenseData) {
-    const response = await axios.post(`${url}/expenses.json`,
-        expenseData
-    );
+    const response = await axios.post(`${url}/expenses.json`, expenseData);
     const id = response.data.name;
     return id;
 };

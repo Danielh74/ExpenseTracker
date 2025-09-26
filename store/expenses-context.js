@@ -11,7 +11,9 @@ export const ExpensesContext = createContext({
 function expensesReducer(state, action) {
     switch (action.type) {
         case 'SET':
-            return action.payload;
+            const expensesList = action.payload;
+            const orderedList = expensesList.sort((a, b) => b.date.getTime() - a.date.getTime());
+            return orderedList;
 
         case 'ADD':
             return [action.payload, ...state];
