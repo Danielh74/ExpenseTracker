@@ -1,23 +1,20 @@
 import { createContext, useReducer } from "react";
 
-const EXPENSES = [
-    { id: 1, description: 'Sushi', amount: 49.99, date: new Date("2025-08-25"), category: 'Food' },
-    { id: 2, description: 'Shoes', amount: 449.99, date: new Date("2025-09-20"), category: 'Clothes' },
-    { id: 3, description: 'Electricity', amount: 219.99, date: new Date("2024-09-10"), category: 'Bills' },
-];
-
 export const ExpensesContext = createContext({
     expenses: [],
     addExpense: ({ category, description, amount, date }) => { },
     deleteExpense: (id) => { },
-    updateExpense: (id, { category, description, amount, date }) => { }
+    updateExpense: (id, { category, description, amount, date }) => { },
+    setExpenses: (expenses) => { }
 });
 
 function expensesReducer(state, action) {
     switch (action.type) {
+        case 'SET':
+            return action.payload;
+
         case 'ADD':
-            const id = new Date().toString() + Math.random().toString();
-            return [{ id, ...action.payload }, ...state];
+            return [action.payload, ...state];
 
         case 'UPDATE':
             const expenseIndex = state.findIndex(expense => expense.id === action.payload.expenseId);
@@ -35,10 +32,14 @@ function expensesReducer(state, action) {
 };
 
 function ExpensesContextProvider({ children }) {
-    const [expenses, dispatch] = useReducer(expensesReducer, EXPENSES);
+    const [expenses, dispatch] = useReducer(expensesReducer, []);
+
+    const setExpenses = (expenses) => {
+        dispatch({ type: 'SET', payload: expenses });
+    };
 
     const addExpense = (expenseData) => {
-        dispatch({ type: 'ADD', payload: { ...expenseData, date: new Date(expenseData.date) } });
+        dispatch({ type: 'ADD', payload: expenseData });
     };
 
     const deleteExpense = (expenseId) => {
@@ -51,6 +52,7 @@ function ExpensesContextProvider({ children }) {
 
     const value = {
         expenses,
+        setExpenses,
         addExpense,
         updateExpense,
         deleteExpense

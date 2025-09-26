@@ -4,16 +4,24 @@ import ExpensesOutput from '../components/ExpensesOutput/ExpensesOutput';
 import { GlobalStyles } from '../constants/styles';
 import { ExpensesContext } from '../store/expenses-context';
 import { getEarliestDate } from '../util/date';
+import { fetchExpenses } from '../util/http';
 
 function RecentExpenses() {
-    const { expenses } = useContext(ExpensesContext);
+    const { expenses, setExpenses } = useContext(ExpensesContext);
     const [period, setPeriod] = useState(7);
-    const [recentExpenses, setRecentExpenses] = useState(expenses.filter(expense => expense.date >= getEarliestDate(7)));
+    const [recentExpenses, setRecentExpenses] = useState([]);
     const content = `No Recent Expenses From The Past ${period} Days`;
 
     useEffect(() => {
-        setRecentExpenses(expenses.filter(expense => expense.date >= getEarliestDate(period)))
-    }, [expenses])
+        const getExpenses = () => {
+            fetchExpenses().then(res => {
+                setExpenses(res);
+                setRecentExpenses(res.filter(expense => expense.date >= getEarliestDate(period)));
+            });
+        };
+
+        getExpenses();
+    }, []);
 
     const changeRecentRange = (numOfDays) => {
         setPeriod(numOfDays);
