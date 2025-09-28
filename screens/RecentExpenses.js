@@ -5,21 +5,30 @@ import { GlobalStyles } from '../constants/styles';
 import { ExpensesContext } from '../store/expenses-context';
 import { getEarliestDate } from '../util/date';
 import { fetchExpenses } from '../util/http';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
+import ErrorOverlay from '../components/UI/ErrorOverlay';
 
 function RecentExpenses() {
     const { expenses, setExpenses } = useContext(ExpensesContext);
     const [period, setPeriod] = useState(7);
     const [recentExpenses, setRecentExpenses] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState();
     const content = `No Recent Expenses From The Past ${period} Days`;
 
-    useEffect(() => {
-        const getExpenses = () => {
-            fetchExpenses().then(res => {
-                setExpenses(res);
-                setRecentExpenses(res.filter(expense => expense.date >= getEarliestDate(period)));
-            });
-        };
+    const getExpenses = () => {
+        setIsLoading(true);
+        fetchExpenses().then(res => {
+            setExpenses(res);
+            setRecentExpenses(res.filter(expense => expense.date >= getEarliestDate(period)));
+        }).catch(err => {
+            setErrorMsg(err.message);
+        }).finally(() => {
+            setIsLoading(false);
+        });
+    };
 
+    useEffect(() => {
         getExpenses();
     }, []);
 
@@ -27,6 +36,19 @@ function RecentExpenses() {
         setPeriod(numOfDays);
         setRecentExpenses(expenses.filter(expense => expense.date >= getEarliestDate(numOfDays)));
     };
+
+    const errorHandler = () => {
+        setErrorMsg(null);
+        getExpenses();
+    }
+
+    if (errorMsg) {
+        return <ErrorOverlay message={errorMsg} onConfirm={errorHandler} />
+    }
+
+    if (isLoading) {
+        return <LoadingOverlay />
+    }
 
     return (
         <View style={styles.container}>

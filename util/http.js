@@ -26,3 +26,18 @@ export async function fetchExpenses() {
 
     return expenses;
 };
+
+export async function changeExpense(id, expenseData) {
+    const response = await axios.put(`${url}/expenses/${id}.json`, expenseData);
+
+    const updatedExpenseData = {
+        ...response.data,
+        date: new Date(response.data.date)
+    };
+
+    return updatedExpenseData;
+};
+
+export async function removeExpense(id) {
+    await axios.delete(`${url}/expenses/${id}.json`);
+};

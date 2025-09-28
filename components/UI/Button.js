@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     flatText: {
-        color: GlobalStyles.colors.primary200
+        color: GlobalStyles.colors.primary500
     },
     pressed: {
         opacity: 0.75,

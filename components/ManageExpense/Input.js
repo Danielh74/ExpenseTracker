@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 12,
-        color: GlobalStyles.colors.primary100,
+        color: GlobalStyles.colors.primary800,
         marginBottom: 4,
     },
     input: {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         padding: 6,
         borderRadius: 6,
         fontSize: 18,
-        color: GlobalStyles.colors.primary700
+        color: GlobalStyles.colors.primary500
     },
     inputMultiline: {
         minHeight: 100,
